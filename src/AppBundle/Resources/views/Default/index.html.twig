@@ -1,0 +1,18 @@
+{% extends '::base.html.twig' %}
+
+{% block body %}
+        <h1>{% block title %}All projects{% endblock %}</h1>
+        <ul>
+            {% for project in projects %}
+                <li>
+                    {% if project.is_public is defined %}
+                        <span>{{ project.name }} (public)</span>
+                    {% else %}
+                        <a href="{{ path('project_view', {'id': project.id}) }}">{{ project.name }}</a>
+                    {% endif %}
+                </li>
+            {% endfor %}
+        </ul>
+{% endblock %}
+
+

@@ -1,0 +1,27 @@
+{
+  "name": "symfony-testing",
+  "version": "0.0.1",
+  "description": "geekhub-php",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git://github.com:Wolframcheg/symfotest.git"
+  },
+  "author": "Pavel and Alexandr",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/Wolframcheg/symfotest/issues"
+  },
+  "dependencies": {
+    "gulp-rimraf": "~0.2",
+    "gulp-concat": "~2.6.0",
+    "gulp": "~3.9.0",
+    "gulp-uglify": "~1.5.1",
+    "less": "~2.5.3",
+    "gulp-less": "~3.0.5",
+    "bower": "~1.7.2"
+  }
+}

@@ -1,0 +1,22 @@
+{
+  "name": "symfonyblog",
+  "description": "geekhub-php",
+  "authors": [
+    "Pavel"
+  ],
+  "license": "MIT",
+  "homepage": "https://github.com/Wolframcheg/symfonyblog",
+  "moduleType": [],
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ],
+  "dependencies": {
+    "font-awesome": "fontawesome#~4.5.0",
+    "bootstrap": "~3.3.6",
+    "jquery": "^2.2.1"
+  }
+}
