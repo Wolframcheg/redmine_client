@@ -2,7 +2,9 @@
 
 {% block body %}
     <h1>{% block title %}Project {{ data.project.name }}{% endblock %}</h1>
-
+    <a class="btn btn-danger" role="button" href="{{ path('time_entry_project',{'identifier': data.project.identifier}) }}">
+        <i class="fa fa-clock-o"></i> Entry Time for project
+    </a>
     <h2>Issues</h2>
 
     <div class="box">
@@ -12,6 +14,7 @@
                 <th>Subject</th>
                 <th>Status</th>
                 <th>Priority</th>
+                <th>Track Issue</th>
             </tr>
             </thead>
             <tbody>
@@ -20,6 +23,10 @@
                     <td>{{ issue.subject }}</td>
                     <td>{{ issue.status.name }}</td>
                     <td>{{ issue.priority.name }}</td>
+                    <td width="100px" align="center"><a href="{{ path('time_entry_issue',{'identifier': data.project.identifier , 'issueId': issue.id}) }}">
+                            <i class="fa fa-clock-o"></i>
+                        </a>
+                    </td>
                 </tr>
             {% endfor %}
             </tbody>
@@ -35,7 +42,7 @@
                 {% endif %}
                 {% for i in 1..data.countPages %}
                     <li class="{{ page == i ? 'active' }}">
-                        <a href="{{ path('project_view',{'id': data.project.id, 'page': i}) }}">{{ i }}</a>
+                        <a href="{{ path('project_view',{'identifier': data.project.identifier, 'page': i}) }}">{{ i }}</a>
                     </li>
                 {% endfor %}
             </ul>

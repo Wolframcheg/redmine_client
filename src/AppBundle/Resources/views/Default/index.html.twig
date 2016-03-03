@@ -8,7 +8,7 @@
                     {% if project.is_public is defined %}
                         <span>{{ project.name }} (public)</span>
                     {% else %}
-                        <a href="{{ path('project_view', {'id': project.id}) }}">{{ project.name }}</a>
+                        <a href="{{ path('project_view', {'identifier': project.identifier}) }}">{{ project.name }}</a>
                     {% endif %}
                 </li>
             {% endfor %}

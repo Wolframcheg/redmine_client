@@ -2,6 +2,7 @@
 namespace AppBundle\Services;
 
 use AppBundle\Entity\User;
+use AppBundle\Interfaces\RedmineManagerInterface;
 use Redmine\Client;
 use Symfony\Bridge\Doctrine\RegistryInterface;
 use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
@@ -13,7 +14,7 @@ use Symfony\Component\HttpKernel\Exception\UnauthorizedHttpException;
  * Class RedmineManager
  * @package AppBundle\Services
  */
-class RedmineManager
+class RedmineManager implements RedmineManagerInterface
 {
     /**
      * @var RegistryInterface
@@ -41,28 +42,34 @@ class RedmineManager
         return $result['projects'];
     }
 
-    public function getProject($id, $page)
+    public function getProjectWithIssues($identifier, $page)
     {
-        $project = $this->redmineApiClient->api('project')->show($id);
-        $this->checkState();
-        $issues = $this->getIssuesByProjectId($project['project']['identifier'], $page);
+        $project = $this->getProject($identifier);
+        $issues = $this->getIssuesByProjectId($project['identifier'], $page);
         $this->checkState();
         $countPages = $this->getPagination($issues['total_count'], $this->pageLimit);
-        if($page > $countPages || $page < 1)
+        if ($page > $countPages || $page < 1)
             $this->checkState(404);
 
         return [
-            'project' => $project['project'],
+            'project' => $project,
             'issues' => $issues['issues'],
             'countPages' => $countPages
         ];
     }
 
-    private function getIssuesByProjectId($id, $page)
+    public function getProject($identifier)
     {
-        $offset = ($page-1)*$this->pageLimit;
+        $project = $this->redmineApiClient->api('project')->show($identifier);
+        $this->checkState();
+        return $project['project'];
+    }
+
+    private function getIssuesByProjectId($identifier, $page)
+    {
+        $offset = ($page - 1) * $this->pageLimit;
         return $this->redmineApiClient->api('issue')->all([
-            'project_id' => $id,
+            'project_id' => $identifier,
             'offset' => $offset,
             'limit' => $this->pageLimit,
         ]);
@@ -70,26 +77,50 @@ class RedmineManager
 
     private function getPagination($all, $limit)
     {
-        return (int)ceil($all/$limit);
+        return (int)ceil($all / $limit);
     }
 
+    public function getActivities()
+    {
+        $activities = $this->redmineApiClient->api('time_entry_activity')->all();
+        $this->checkState();
+        return $activities['time_entry_activities'];
+    }
+
+    public function getActivitiesPairs()
+    {
+        $activities = $this->getActivities();
+        $pairs = [];
+        foreach ($activities as $activity) {
+            $pairs[$activity['name']] = $activity['id'];
+        }
+        return $pairs;
+    }
+
+    public function trackTime($data)
+    {
+        $response = $this->redmineApiClient->api('time_entry')->create($data);
+        $this->checkState();
+        return $response;
+    }
 
 
     public function checkState($code = null)
     {
-        if(!$code)
+        if (!$code)
             $code = $this->redmineApiClient->getResponseCode();
         switch ($code) {
             case 401:
-                throw new HttpException(401,'Invalid cridentionals, Please check parameters');
+                throw new HttpException(401, 'Invalid cridentionals, Please check parameters');
                 break;
             case 403:
-                throw new HttpException(403,'Access denied');
+                throw new HttpException(403, 'Access denied');
                 break;
             case 404:
-                throw new HttpException(404,'Page not Found');
+                throw new HttpException(404, 'Page not Found');
                 break;
-            default: ;
+            default:
+                ;
 
         }
 

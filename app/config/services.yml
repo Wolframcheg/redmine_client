@@ -10,3 +10,6 @@ services:
     redmine_manager:
         class: AppBundle\Services\RedmineManager
         arguments: ["@redmine_api_client", "%pagination_limit%"]
+    time_entry_manager:
+        class: AppBundle\Services\TimeEntryManager
+        arguments: ["@redmine_manager", "@form.factory", "@router"]

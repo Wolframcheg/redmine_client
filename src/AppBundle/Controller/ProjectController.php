@@ -25,15 +25,15 @@ class ProjectController extends Controller
     }
 
     /**
-     * @Route("/{id}", requirements={"id" = "\d+"}, name="project_view")
+     * @Route("/{identifier}", requirements={"identifier" = "[a-zA-Z1-9\-_\/]+"}, name="project_view")
      * @Template()
      */
-    public function viewAction(Request $request, $id)
+    public function viewAction(Request $request, $identifier)
     {
         $page = $request->query->getInt('page', 1);
         $data = $this->container->get('redmine_manager')
-            ->getProject($id, $page);
-        //var_dump($data);exit();
+            ->getProjectWithIssues($identifier, $page);
+
         return ['data' => $data];
     }
 
