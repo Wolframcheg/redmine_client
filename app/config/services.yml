@@ -9,4 +9,4 @@ services:
         arguments: ["%redmine_base_url%", "%redmine_api_key%"]
     redmine_manager:
         class: AppBundle\Services\RedmineManager
-        arguments: ["@redmine_api_client"]
+        arguments: ["@redmine_api_client", "%pagination_limit%"]

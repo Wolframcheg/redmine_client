@@ -30,13 +30,11 @@ class ProjectController extends Controller
      */
     public function viewAction(Request $request, $id)
     {
-        $project = $this->container->get('redmine_manager')
-            ->getProject($id);
-
-        $issues = $this->container->get('redmine_manager')
-            ->getIssuesByProjectId($project['identifier']);
-
-        return ['project' => $project];
+        $page = $request->query->getInt('page', 1);
+        $data = $this->container->get('redmine_manager')
+            ->getProject($id, $page);
+        //var_dump($data);exit();
+        return ['data' => $data];
     }
 
 }

@@ -15,8 +15,6 @@
                     <li class="{{ app.request.attributes.get('_route') == 'homepage' ? 'active' }}">
                         <a href="{{  path('homepage') }}">Home</a>
                     </li>
-                    {#<li><a href="#">Профиль</a></li>#}
-                    {#<li><a href="#">Сообщение</a></li>#}
                 </ul>
                 <section>
                     {% block body %}{% endblock %}

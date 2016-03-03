@@ -16,7 +16,6 @@
 /web/bundles/
 /build/
 /vendor/
-/bin/
 /composer.phar
 /node_modules/
 /bower_components/
