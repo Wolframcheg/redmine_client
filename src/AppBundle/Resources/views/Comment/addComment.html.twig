@@ -1,0 +1,9 @@
+{% extends '::base.html.twig' %}
+
+{% block body %}
+    <a class="btn btn-success" role="button" href="{{ path('project_view', {'identifier': project.identifier}) }}">Return to project page</a>
+    <h1>{% block title %}Add comment to project "{{ project.name }}"{% endblock %}</h1>
+    {{ form(form) }}
+{% endblock %}
+
+

@@ -2,7 +2,6 @@
 
 namespace AppBundle\Controller;
 
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
@@ -34,7 +33,13 @@ class ProjectController extends Controller
         $data = $this->container->get('redmine_manager')
             ->getProjectWithIssues($identifier, $page);
 
-        return ['data' => $data];
+        $em = $this->getDoctrine()->getManager();
+        $comments = $em->getRepository('AppBundle:Comment')->findBy(['project' => $identifier],['createdAt' => 'ASC']);
+
+        return [
+            'data' => $data,
+            'comments' => $comments
+        ];
     }
 
 }

@@ -1,10 +1,10 @@
 <?php
 namespace AppBundle\Services;
 
-use AppBundle\Entity\TimeEntry;
 use AppBundle\Entity\User;
-use AppBundle\Form\TimeEntryType;
+use AppBundle\Form\CommentType;
 use AppBundle\Interfaces\RedmineManagerInterface;
+use AppBundle\Entity\Comment;
 use Symfony\Bridge\Doctrine\RegistryInterface;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\Form\FormFactoryInterface;
@@ -15,10 +15,10 @@ use Symfony\Component\Routing\RouterInterface;
 
 
 /**
- * Class RedmineManager
+ * Class CommentManager
  * @package AppBundle\Services
  */
-class TimeEntryManager
+class CommentManager
 {
 
     private $redmineManager;
@@ -26,6 +26,8 @@ class TimeEntryManager
     private $formFactory;
     
     private $router;
+
+    private $doctrine;
 
 
     /**
@@ -35,43 +37,37 @@ class TimeEntryManager
      */
     public function __construct(RedmineManagerInterface $redmineManager,
                                 FormFactoryInterface $formFactory,
-                                RouterInterface $router)
+                                RouterInterface $router,
+                                RegistryInterface $doctrine)
     {
         $this->redmineManager = $redmineManager;
         $this->formFactory = $formFactory;
         $this->router = $router;
+        $this->doctrine = $doctrine;
     }
 
-    public function process(Request $request, $identifier, $issueId = null)
+    public function process(Request $request, $identifier)
     {
         $project = $this->redmineManager->getProject($identifier);
-        $activities = $this->redmineManager->getActivitiesPairs();
 
-        $timeEntry = new TimeEntry();
+        $em = $this->doctrine->getManager();
+        $comment= new Comment();
+        $comment->setProject($identifier);
 
-        $form = $this->formFactory->create(TimeEntryType::class, $timeEntry, [
-            'projectId' =>  $project['id'],
-            'activities' => $activities,
-            'issueId' => $issueId
-        ]);
+        $form = $this->formFactory->create(CommentType::class, $comment);
         $form->add('submit', SubmitType::class, ['label' => 'Save', 'attr' => [ 'class' => 'btn btn-primary' ]]);
 
         $form->handleRequest($request);
+
         if ($form->isSubmitted() && $form->isValid()) {
-            $timeEntry->setIssueId($issueId);
-            $response = $this->redmineManager->trackTime($timeEntry->toArray());
-
+            $em->persist($comment);
+            $em->flush();
             $session = $request->getSession();
-
-            if($response->error){
-                $session->getFlashBag()->add('warning', 'Time did not traсked. Something went wrong');
-            } else
-                $session->getFlashBag()->add('success', "{$timeEntry->getHours()}h was tracked");
+            $session->getFlashBag()->add('success', "Comment was created");
 
             $url = $this->router->generate('project_view', ['identifier' => $identifier]);
             return new RedirectResponse($url, 301);
         }
-
 
         return [
             'project' => $project,

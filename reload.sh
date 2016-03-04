@@ -17,7 +17,7 @@ install_run()
 {
     composer install
     php bin/console doctrine:database:create
-    php bin/console doctrine:schema:update --force
+    php bin/console doctrine:migrations:migrate -n
     php bin/console cache:clear
     php bin/console cache:clear -e prod
     npm install
@@ -31,7 +31,7 @@ update_run ()
     composer install
     php bin/console doctrine:database:drop --force
     php bin/console doctrine:database:create
-    php bin/console doctrine:schema:update --force
+    php bin/console doctrine:migrations:migrate -n
     php bin/console cache:clear
     php bin/console cache:clear -e prod
     npm install

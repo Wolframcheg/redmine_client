@@ -13,3 +13,6 @@ services:
     time_entry_manager:
         class: AppBundle\Services\TimeEntryManager
         arguments: ["@redmine_manager", "@form.factory", "@router"]
+    comment_manager:
+        class: AppBundle\Services\CommentManager
+        arguments: ["@redmine_manager", "@form.factory", "@router", "@doctrine"]

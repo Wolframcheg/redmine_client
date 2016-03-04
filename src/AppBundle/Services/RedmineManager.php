@@ -5,9 +5,8 @@ use AppBundle\Entity\User;
 use AppBundle\Interfaces\RedmineManagerInterface;
 use Redmine\Client;
 use Symfony\Bridge\Doctrine\RegistryInterface;
-use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
 use Symfony\Component\HttpKernel\Exception\HttpException;
-use Symfony\Component\HttpKernel\Exception\UnauthorizedHttpException;
+
 
 
 /**
