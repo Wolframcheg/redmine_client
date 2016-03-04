@@ -8,5 +8,5 @@ sh reload.sh -install
 ```
 
 In process installing you should some important data for working with redmine client:
-    redmine_base_url  - Base Api Url  
-    redmine_api_key   - Api key
+   * redmine_base_url  - Base Api Url
+   * redmine_api_key   - Api key
